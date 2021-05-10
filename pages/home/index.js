@@ -1,8 +1,5 @@
 import {Grid} from "@material-ui/core";
 import React from "react";
-import useSWR from "swr";
-import MaterialTable from "material-table";
-import tableIcons from "../components/indexIcons";
 
 function Index(/*{dataSSR}*/) {
     //const tableRef = React.createRef();
