@@ -35,6 +35,9 @@ function Index({dataSSR}) {
                         options={{ pageSize: perPage }}
                     />
                 </Grid>
+                <Grid item xs={1}>
+                    <div>{dataSSR}</div>
+                </Grid>
             </Grid>
         </div>
     );
@@ -42,14 +45,14 @@ function Index({dataSSR}) {
 
 export async function getServerSideProps() {
     // Call an external API endpoint to get posts
-    const data = 'await res.json()';
+    const dataSSR = Math.floor(Math.random() * 20);;
 
 
     // By returning { props: { posts } }, the Blog component
     // will receive `posts` as a prop at build time
     return {
         props: {
-            data,
+            dataSSR,
         },
     }
 }
