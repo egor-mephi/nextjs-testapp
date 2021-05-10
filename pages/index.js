@@ -6,7 +6,7 @@ import tableIcons from "../components/indexIcons";
 
 const fetcher = url => fetch(url).then(res => res.json());
 
-function Index() {
+function Index({dataSSR}) {
     //const tableRef = React.createRef();
     const [page, setPage] = React.useState(0);
     const [perPage, setPerPage] = React.useState(5);
@@ -40,10 +40,9 @@ function Index() {
     );
 }
 
-/*export async function getServerSideProps() {
+export async function getServerSideProps() {
     // Call an external API endpoint to get posts
-    const res = await fetch('http://localhost:8080/api/rooms')
-    const data = await res.json()
+    const data = 'await res.json()';
 
 
     // By returning { props: { posts } }, the Blog component
@@ -53,6 +52,6 @@ function Index() {
             data,
         },
     }
-}*/
+}
 
 export default Index
