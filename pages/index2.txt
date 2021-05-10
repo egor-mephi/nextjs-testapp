@@ -1,0 +1,216 @@
+import MaterialTable from "material-table";
+import React from 'react';
+import {
+    Grid, IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableFooter,
+    TableHead, TablePagination,
+    TableRow, useTheme
+} from "@material-ui/core";
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import {Component} from "react";
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
+import PropTypes from 'prop-types';
+
+const pageSize = 5;
+
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+    },
+}))(TableRow);
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 700,
+    },
+});
+
+const useStyles1 = makeStyles((theme) => ({
+    root: {
+        flexShrink: 0,
+        marginLeft: theme.spacing(2.5),
+    },
+}));
+
+function TablePaginationActions(props) {
+    const classes = useStyles1();
+    const theme = useTheme();
+    const { count, page, rowsPerPage, onChangePage } = props;
+
+    const handleFirstPageButtonClick = (event) => {
+        onChangePage(event, 0);
+    };
+
+    const handleBackButtonClick = (event) => {
+        onChangePage(event, page - 1);
+    };
+
+    const handleNextButtonClick = (event) => {
+        onChangePage(event, page + 1);
+    };
+
+    const handleLastPageButtonClick = (event) => {
+        onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    };
+
+    return (
+        <div className={classes.root}>
+            <IconButton
+                onClick={handleFirstPageButtonClick}
+                disabled={page === 0}
+                aria-label="first page">
+                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+            </IconButton>
+            <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
+                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+            </IconButton>
+            <IconButton
+                onClick={handleNextButtonClick}
+                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                aria-label="next page"
+            >
+                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </IconButton>
+            <IconButton
+                onClick={handleLastPageButtonClick}
+                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                aria-label="last page"
+            >
+                {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+            </IconButton>
+        </div>
+    );
+}
+
+TablePaginationActions.propTypes = {
+    count: PropTypes.number.isRequired,
+    onChangePage: PropTypes.func.isRequired,
+    page: PropTypes.number.isRequired,
+    rowsPerPage: PropTypes.number.isRequired,
+};
+
+function Index111({data}) {
+    const classes = useStyles();
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [tableData, setData] = React.useState(data);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+        fetch("http://localhost:8080/api/rooms")
+            .then(res => res.json())
+            .then((result) => {
+                console.log(result);
+                console.log(123);
+                setData(result);
+            });
+
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+    return (
+        <div style={{maxWidth: '100%'}}>
+            <Grid container spacing={0} >
+                <Grid item xs={6}>
+                    <MaterialTable
+                        options={[
+                            {paginationType: "stepped"}
+                        ]}
+                        columns={[
+                            {title: 'ID', field: 'id'},
+                            {title: 'Name', field: 'name'},
+                            {title: 'Creation Date', field: 'creationDate'},
+                            {title: 'Comment', field: 'comment'},
+                            {title: 'Creator 1', field: 'creator.name'}
+                        ]}
+                        data={data}
+                        title="Rooms"
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TableContainer component={Paper}>
+                        <Table className={classes.table} aria-label="custom pagination table" columns>
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell>ID</StyledTableCell>
+                                    <StyledTableCell align="right">Name</StyledTableCell>
+                                    <StyledTableCell align="right">Creation Date</StyledTableCell>
+                                    <StyledTableCell align="right">Comment</StyledTableCell>
+                                    <StyledTableCell align="right">Creator</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {tableData.map((row) => (
+                                    <StyledTableRow key={row.id}>
+                                        <StyledTableCell component="th" scope="row">{row.id}</StyledTableCell>
+                                        <StyledTableCell align="right">{row.name}</StyledTableCell>
+                                        <StyledTableCell align="right">{row.creationDate}</StyledTableCell>
+                                        <StyledTableCell align="right">{row.comment}</StyledTableCell>
+                                        <StyledTableCell align="right">{row.creator.name}</StyledTableCell>
+                                    </StyledTableRow>
+                                ))}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5]}
+                                        colSpan={3}
+                                        count={data.length}
+                                        rowsPerPage={5}
+                                        page={page}
+                                        SelectProps={{
+                                            inputProps: { 'aria-label': 'rows per page' },
+                                            native: true,
+                                        }}
+                                        onChangePage={handleChangePage}
+                                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </Grid>
+            </Grid>
+
+        </div>
+    )
+}
+
+export async function getServerSideProps() {
+    // Call an external API endpoint to get posts
+    const res = await fetch('http://localhost:8080/api/rooms')
+    const data = await res.json()
+
+
+    // By returning { props: { posts } }, the Blog component
+    // will receive `posts` as a prop at build time
+    return {
+        props: {
+            data,
+        },
+    }
+}
+
+export default Index111
