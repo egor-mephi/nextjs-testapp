@@ -6,11 +6,11 @@ import tableIcons from "../components/indexIcons";
 
 const fetcher = url => fetch(url).then(res => res.json());
 
-function Index({dataSSR}) {
+function Index(/*{dataSSR}*/) {
     //const tableRef = React.createRef();
     const [page, setPage] = React.useState(0);
     const [perPage, setPerPage] = React.useState(5);
-    const {data, error} = useSWR(`http://localhost:8080/api/rooms?page=${page}&per_page=${perPage}`, fetcher);
+    const {data, error} = useSWR(`https://localhost:443/api/rooms?page=${page}&per_page=${perPage}`, fetcher);
     if (error) return <div>failed to load</div>
     if (!data) return <div>loading...</div>
     console.log(data);
@@ -36,14 +36,15 @@ function Index({dataSSR}) {
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <div>{dataSSR}</div>
+                    <div>{process.env.API_PATH}</div>
+                    <div>{process.env.NODE_ENV}</div>
                 </Grid>
             </Grid>
         </div>
     );
 }
 
-export async function getServerSideProps() {
+/*export async function getServerSideProps() {
     // Call an external API endpoint to get posts
     const dataSSR = Math.floor(Math.random() * 20);;
 
@@ -55,6 +56,6 @@ export async function getServerSideProps() {
             dataSSR,
         },
     }
-}
+}*/
 
 export default Index
