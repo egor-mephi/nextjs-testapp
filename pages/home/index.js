@@ -1,7 +1,7 @@
 import {Grid} from "@material-ui/core";
 import React from "react";
 
-function Index(/*{dataSSR}*/) {
+function Index({dataSSR}) {
     //const tableRef = React.createRef();
 
     return (
@@ -9,16 +9,18 @@ function Index(/*{dataSSR}*/) {
             <Grid container spacing={0}>
                 <Grid item xs={1}>
                     <div>{process.env.API_PATH}</div>
-                    <div>{process.env.NODE_ENV}</div>
+                    <div>{process.env.API_TEST_PATH}</div>
+                    <div>{process.env.NEXT_PUBLIC_API_PATH}</div>
+                    <div>{dataSSR}</div>
                 </Grid>
             </Grid>
         </div>
     );
 }
 
-/*export async function getServerSideProps() {
+export async function getServerSideProps() {
     // Call an external API endpoint to get posts
-    const dataSSR = Math.floor(Math.random() * 20);;
+    const dataSSR = Math.floor(Math.random() * 20);
 
 
     // By returning { props: { posts } }, the Blog component
@@ -28,6 +30,6 @@ function Index(/*{dataSSR}*/) {
             dataSSR,
         },
     }
-}*/
+}
 
 export default Index
