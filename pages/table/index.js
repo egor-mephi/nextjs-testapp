@@ -10,7 +10,7 @@ function Index(/*{dataSSR}*/) {
     //const tableRef = React.createRef();
     const [page, setPage] = React.useState(0);
     const [perPage, setPerPage] = React.useState(5);
-    const {data, error} = useSWR(`https://localhost/api/rooms?page=${page}&per_page=${perPage}`, fetcher);
+    const {data, error} = useSWR(`https://test-route-egor-mephi-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/api/rooms?page=${page}&per_page=${perPage}`, fetcher);
     if (error) return <div>failed to load1</div>
     if (!data) return <div>loading...</div>
     console.log(data);
